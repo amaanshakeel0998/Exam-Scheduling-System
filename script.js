@@ -154,11 +154,11 @@ const themePresets = {
         body: '#0f172a', 
         card: '#1e293b', 
         accent: '#38bdf8',
-        text: '#e2e8f0',
+        text: '#cbd5e1',
         textLight: '#94a3b8',
         border: '#334155',
         inputBg: '#334155',
-        heading: '#f8fafc',
+        heading: '#38bdf8',
         hoverBg: '#334155'
     }
 };
@@ -935,12 +935,17 @@ function initIssueReporting() {
 
         emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
             .then(function() {
-                statusMsg.textContent = "Issue submitted successfully! We'll get back to you soon.";
-                statusMsg.className = 'success';
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
                 form.reset();
-                setTimeout(() => toggleModal(false), 3000);
+                toggleModal(false);
+                
+                // Show Thank You Toast
+                const toast = document.getElementById('thank-you-toast');
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
             }, function(error) {
                 console.error('EmailJS Error:', error);
                 statusMsg.textContent = "Failed to send issue. Please try again later.";
