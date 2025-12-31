@@ -1,3 +1,4 @@
+
 // ==========================================
 // Global State
 // ==========================================
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCourseDropdown();
     setupEventListeners();
     setupNavigation();
+    initIssueReporting();
 });
 
 function initializeCourseDropdown() {
@@ -166,10 +168,13 @@ function initializeTheme() {
     document.getElementById('theme-toggle-btn')?.addEventListener('click', toggleThemePanel);
     document.getElementById('close-theme-btn')?.addEventListener('click', closeThemePanel);
     
-    // Color pickers sync
+    // Color pickers sync & instant apply
     ['header', 'body', 'card', 'accent'].forEach(type => {
         document.getElementById(`${type}-color`)?.addEventListener('input', function() {
             document.getElementById(`${type}-color-text`).value = this.value;
+            const theme = getCurrentCustomTheme();
+            applyTheme(theme);
+            saveThemeToStorage(theme);
         });
     });
 
@@ -177,33 +182,32 @@ function initializeTheme() {
     document.querySelectorAll('.preset-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const preset = themePresets[btn.dataset.preset];
-            if(preset) applyTheme(preset);
+            if(preset) {
+                applyTheme(preset);
+                saveThemeToStorage(preset);
+            }
         });
-    });
-
-    document.getElementById('apply-theme-btn')?.addEventListener('click', () => {
-        const theme = {
-            header: document.getElementById('header-color').value,
-            body: document.getElementById('body-color').value,
-            card: document.getElementById('card-color').value,
-            accent: document.getElementById('accent-color').value,
-            // Fallback for custom theme if not in presets (could be improved to infer contrast)
-            text: '#333333',
-            textLight: '#6c757d',
-            border: '#dde1e6',
-            inputBg: '#ffffff',
-            heading: '#2c3e50',
-            hoverBg: '#ecf0f1'
-        };
-        applyTheme(theme);
-        saveThemeToStorage(theme);
-        closeThemePanel();
     });
 
     document.getElementById('reset-theme-btn')?.addEventListener('click', () => {
         applyTheme(themePresets.default);
         saveThemeToStorage(themePresets.default);
     });
+}
+
+function getCurrentCustomTheme() {
+    return {
+        header: document.getElementById('header-color').value,
+        body: document.getElementById('body-color').value,
+        card: document.getElementById('card-color').value,
+        accent: document.getElementById('accent-color').value,
+        text: '#333333',
+        textLight: '#6c757d',
+        border: '#dde1e6',
+        inputBg: '#ffffff',
+        heading: '#2c3e50',
+        hoverBg: '#ecf0f1'
+    };
 }
 
 function applyTheme(theme) {
@@ -864,4 +868,85 @@ function exportCSV() {
 function exportPDF() {
     // Simple Print View for now
     window.print();
+}
+
+// ==========================================
+// Issue Reporting Feature (EmailJS)
+// ==========================================
+function initIssueReporting() {
+    // EmailJS Initialization - Replace these with your actual credentials
+    const EMAILJS_PUBLIC_KEY = "WhjA_Pwp1oLaqlsR-";
+    const EMAILJS_SERVICE_ID = "service_kkiuyae";
+    const EMAILJS_TEMPLATE_ID = "template_hskx2v8";
+
+    if (EMAILJS_PUBLIC_KEY !== "") {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
+
+    const trigger = document.getElementById('issue-report-trigger');
+    const modal = document.getElementById('issue-modal');
+    const closeBtn = document.getElementById('close-issue-modal');
+    const cancelBtn = document.getElementById('cancel-issue-btn');
+    const form = document.getElementById('issue-form');
+    const statusMsg = document.getElementById('issue-status-message');
+
+    function toggleModal(show) {
+        if (show) {
+            modal.classList.add('active');
+            statusMsg.style.display = 'none';
+            statusMsg.className = '';
+            form.reset();
+        } else {
+            modal.classList.remove('active');
+        }
+    }
+
+    trigger.addEventListener('click', () => toggleModal(true));
+    closeBtn.addEventListener('click', () => toggleModal(false));
+    cancelBtn.addEventListener('click', () => toggleModal(false));
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) toggleModal(false);
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (EMAILJS_PUBLIC_KEY === "") {
+            statusMsg.textContent = "EmailJS is not configured yet. Please provide your credentials.";
+            statusMsg.className = 'error';
+            return;
+        }
+
+        const submitBtn = document.getElementById('submit-issue-btn');
+        const originalBtnText = submitBtn.innerHTML;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        
+        statusMsg.style.display = 'none';
+
+        const templateParams = {
+            from_name: document.getElementById('issue-name').value,
+            from_email: document.getElementById('issue-email').value,
+            message: document.getElementById('issue-description').value,
+            to_email: 'itsmeandu822@gmail.com'
+        };
+
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+            .then(function() {
+                statusMsg.textContent = "Issue submitted successfully! We'll get back to you soon.";
+                statusMsg.className = 'success';
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                form.reset();
+                setTimeout(() => toggleModal(false), 3000);
+            }, function(error) {
+                console.error('EmailJS Error:', error);
+                statusMsg.textContent = "Failed to send issue. Please try again later.";
+                statusMsg.className = 'error';
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            });
+    });
 }
