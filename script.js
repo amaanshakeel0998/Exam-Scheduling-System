@@ -1,4 +1,3 @@
-
 // ==========================================
 // Global State
 // ==========================================
@@ -254,6 +253,24 @@ function closeThemePanel() {
 // UI Logic & Event Listeners
 // ==========================================
 function setupNavigation() {
+    // Mobile Menu Toggle
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    
+    if(menuToggle && sidebar) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if(sidebar.classList.contains('active') && !sidebar.contains(e.target) && e.target !== menuToggle) {
+                sidebar.classList.remove('active');
+            }
+        });
+    }
+
     document.querySelectorAll('.nav-item').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -262,6 +279,9 @@ function setupNavigation() {
             btn.classList.add('active');
             const sectionId = btn.dataset.section + '-section';
             document.getElementById(sectionId).classList.add('active');
+
+            // Close mobile menu after selection
+            if(sidebar) sidebar.classList.remove('active');
         });
     });
 }
