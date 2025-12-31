@@ -267,6 +267,15 @@ function setupNavigation() {
 }
 
 function setupEventListeners() {
+    // 0. Global Click-to-Show Datalist Fix
+    document.querySelectorAll('input[list]').forEach(input => {
+        input.addEventListener('click', function() {
+            // Only clear if user clicks an already focused input or just to show options
+            this.value = ''; 
+            this.dispatchEvent(new Event('input'));
+        });
+    });
+
     // 1. Time Slots
     document.getElementById('add-timeslot-btn').addEventListener('click', addTimeSlot);
     
@@ -405,6 +414,8 @@ function handleCourseNameInput() {
     const mapping = courseMappings.find(m => m.name === selectedName);
     if(mapping) {
         codeSelect.value = mapping.code;
+    } else {
+        codeSelect.value = '';
     }
 }
 
