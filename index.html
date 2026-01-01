@@ -255,35 +255,42 @@
             <!-- Departments -->
             <div class="card">
               <h3 class="card-title">
-                <i class="fas fa-building"></i> Departments
+                <i class="fas fa-building"></i> Departments & Semesters
               </h3>
-              <div class="form-group">
-                <div class="input-group">
-                  <div class="searchable-select" style="flex: 1">
-                    <input
-                      type="text"
-                      id="dept-input"
-                      list="dept-options"
-                      placeholder="Select or Enter Department"
-                    />
-                    <datalist id="dept-options">
-                      <option value="CS – Computer Science"></option>
-                      <option value="SE – Software Engineering"></option>
-                      <option value="BBA – Business Administration"></option>
-                      <option value="PSY – Psychology"></option>
-                      <option value="AF – Accounting & Finance"></option>
-                      <option value="ID – Interior Design"></option>
-                      <option
-                        value="ELS – English & Linguistic Studies"
-                      ></option>
-                      <option
-                        value="DDCA – Digital Design & Computer Arts"
-                      ></option>
-                    </datalist>
+              <div class="form-row">
+                <div class="form-group" style="flex: 1">
+                  <label for="total-semesters">Total Semesters</label>
+                  <input type="number" id="total-semesters" placeholder="e.g., 8" min="1" value="8" />
+                </div>
+                <div class="form-group" style="flex: 2">
+                  <label>Add Department</label>
+                  <div class="input-group">
+                    <div class="searchable-select" style="flex: 1">
+                      <input
+                        type="text"
+                        id="dept-input"
+                        list="dept-options"
+                        placeholder="Select or Enter Department"
+                      />
+                      <datalist id="dept-options">
+                        <option value="CS – Computer Science"></option>
+                        <option value="SE – Software Engineering"></option>
+                        <option value="BBA – Business Administration"></option>
+                        <option value="PSY – Psychology"></option>
+                        <option value="AF – Accounting & Finance"></option>
+                        <option value="ID – Interior Design"></option>
+                        <option
+                          value="ELS – English & Linguistic Studies"
+                        ></option>
+                        <option
+                          value="DDCA – Digital Design & Computer Arts"
+                        ></option>
+                      </datalist>
+                    </div>
+                    <button class="btn btn-secondary" id="add-dept-btn">
+                      <i class="fas fa-plus"></i> Add
+                    </button>
                   </div>
-                  <button class="btn btn-secondary" id="add-dept-btn">
-                    <i class="fas fa-plus"></i> Add
-                  </button>
                 </div>
               </div>
               <div id="dept-list" class="input-tag-group"></div>
@@ -295,6 +302,36 @@
                 <i class="fas fa-book"></i> Exams & Courses
               </h3>
               <div id="exams-list" class="items-list"></div>
+
+              <div class="form-row">
+                <div class="form-group" style="flex: 1">
+                  <label for="course-semester">Semester</label>
+                  <select id="course-semester">
+                    <option value="">Select Semester</option>
+                  </select>
+                </div>
+                <div class="form-group" style="flex: 2">
+                  <label>Departments</label>
+                  <div class="input-group">
+                    <div class="searchable-select" style="flex: 1">
+                      <select id="course-dept-select">
+                        <option value="">Select Dept</option>
+                      </select>
+                    </div>
+                    <button
+                      class="btn btn-sm btn-secondary"
+                      id="add-exam-dept-btn"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div
+                    id="exam-depts-list"
+                    class="input-tag-group"
+                    style="margin-top: 0.5rem"
+                  ></div>
+                </div>
+              </div>
 
               <div class="form-row">
                 <div class="form-group" style="flex: 2">
@@ -374,39 +411,6 @@
                       <option value="">Select Code</option>
                     </select>
                   </div>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group" style="flex: 1">
-                  <label>Departments</label>
-                  <div class="input-group">
-                    <div class="searchable-select" style="flex: 1">
-                      <select id="course-dept-select">
-                        <option value="">Select Dept</option>
-                      </select>
-                    </div>
-                    <button
-                      class="btn btn-sm btn-secondary"
-                      id="add-exam-dept-btn"
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <div
-                    id="exam-depts-list"
-                    class="input-tag-group"
-                    style="margin-top: 0.5rem"
-                  ></div>
-                </div>
-                <div class="form-group" style="flex: 1">
-                  <label>Student Count</label>
-                  <input
-                    type="number"
-                    id="student-count"
-                    placeholder="e.g., 40"
-                    min="1"
-                  />
                 </div>
               </div>
 
@@ -502,21 +506,12 @@
               <div id="rooms-list" class="items-list"></div>
 
               <div class="form-row">
-                <div class="form-group" style="flex: 2">
+                <div class="form-group" style="flex: 1">
                   <label>Room Name/Number</label>
                   <input
                     type="text"
                     id="room-name"
                     placeholder="e.g., Room 101"
-                  />
-                </div>
-                <div class="form-group" style="flex: 1">
-                  <label>Capacity</label>
-                  <input
-                    type="number"
-                    id="room-capacity"
-                    placeholder="e.g., 50"
-                    min="1"
                   />
                 </div>
               </div>
@@ -532,7 +527,7 @@
 
             <!-- Generate Button -->
             <div class="action-bar">
-              <button class="btn btn-primary btn-large" id="generate-btn">
+              <button class="btn btn-primary btn-large" id="generate-btn" onclick="console.log('Generate clicked via onclick'); generateDatesheet()">
                 <i class="fas fa-magic"></i> Generate Datesheet
               </button>
             </div>
@@ -619,6 +614,48 @@
           <button class="btn btn-primary" id="confirm-action-btn">
             Confirm
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Exam Modal -->
+    <div id="edit-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-edit"></i> Edit Scheduled Exam</h3>
+          <button class="close-modal-btn" id="close-edit-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-semester">Semester</label>
+            <input type="number" id="edit-semester" min="1" />
+          </div>
+          <div class="form-group">
+            <label for="edit-course-code">Course Code</label>
+            <input type="text" id="edit-course-code" />
+          </div>
+          <div class="form-group">
+            <label for="edit-course-name">Course Name</label>
+            <input type="text" id="edit-course-name" />
+          </div>
+          <div class="form-group">
+            <label>Departments (Comma separated)</label>
+            <input type="text" id="edit-depts" />
+          </div>
+          <div class="form-group">
+            <label for="edit-room">Room</label>
+            <select id="edit-room"></select>
+          </div>
+          <div class="form-group">
+            <label for="edit-invigilator">Invigilator</label>
+            <select id="edit-invigilator"></select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-edit-btn">Cancel</button>
+          <button class="btn btn-primary" id="save-edit-btn">Save Changes</button>
         </div>
       </div>
     </div>
