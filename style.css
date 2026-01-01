@@ -43,6 +43,10 @@ body {
     flex-direction: column;
 }
 
+.hidden {
+    display: none !important;
+}
+
 /* Header */
 .header {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -492,6 +496,13 @@ body {
     display: flex;
     gap: 0.75rem;
     width: 100%;
+    align-items: center;
+}
+
+.input-group input, 
+.input-group select,
+.input-group .searchable-select {
+    flex: 1;
 }
 
 @media (max-width: 480px) {
@@ -1226,4 +1237,3 @@ input[type="date"] {
     outline: 2px dashed var(--primary-color);
     background: var(--hover-bg) !important;
 }
-
