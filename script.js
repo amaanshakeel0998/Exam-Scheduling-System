@@ -81,23 +81,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializeSemesterDropdown() {
     const select = document.getElementById('course-semester');
+    const editSelect = document.getElementById('edit-semester');
     const totalInput = document.getElementById('total-semesters');
-    if(!select || !totalInput) return;
+    const applyBtn = document.getElementById('apply-semesters-btn');
+    const deptRow = document.getElementById('dept-input-row');
+    
+    if(!select || !totalInput || !applyBtn) return;
 
     const updateDropdown = () => {
         const total = parseInt(totalInput.value) || 0;
-        state.config.totalSemesters = total;
-        select.innerHTML = '<option value="">Select Semester</option>';
-        for(let i = 1; i <= total; i++) {
-            const opt = document.createElement('option');
-            opt.value = i;
-            opt.innerText = `Semester ${i}`;
-            select.appendChild(opt);
+        if (total < 1) {
+            alert("Please enter a valid number of semesters.");
+            return;
         }
+        state.config.totalSemesters = total;
+        
+        // Update exam course semester dropdown
+        const options = ['<option value="">Select Semester</option>'];
+        for(let i = 1; i <= total; i++) {
+            options.push(`<option value="${i}">Semester ${i}</option>`);
+        }
+        
+        const optionsHtml = options.join('');
+        select.innerHTML = optionsHtml;
+        if (editSelect) editSelect.innerHTML = optionsHtml;
+        
+        // Show department row
+        if (deptRow) {
+            deptRow.classList.remove('hidden');
+            // Scroll to it smoothly
+            deptRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Visual feedback on button
+        const originalContent = applyBtn.innerHTML;
+        applyBtn.innerHTML = '<i class="fas fa-check-double"></i> Applied';
+        applyBtn.style.backgroundColor = 'var(--success-color)';
+        
+        setTimeout(() => {
+            applyBtn.innerHTML = originalContent;
+            applyBtn.style.backgroundColor = '';
+        }, 2000);
+        
+        console.log(`✅ Applied ${total} semesters to configuration`);
     };
 
-    totalInput.addEventListener('input', updateDropdown);
-    updateDropdown(); // Initial call
+    applyBtn.addEventListener('click', updateDropdown);
 }
 
 function initializeCourseDropdown() {
@@ -475,16 +504,37 @@ function addDepartment() {
     if(val && !state.departments.includes(val)) {
         showConfirmation(`Add department "${val}"?`, () => {
             state.departments.push(val);
-            renderTags('dept-list', state.departments, (idx) => {
-                state.departments.splice(idx, 1);
-                updateDeptSelect();
-                renderTags('dept-list', state.departments, null);
-            });
+            renderDeptList();
             updateDeptSelect();
             input.value = '';
         });
     }
 }
+
+function renderDeptList() {
+    const container = document.getElementById('dept-list');
+    if (!container) return;
+    container.innerHTML = '';
+    state.departments.forEach((dept, idx) => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+            <div class="item-details">
+                <strong><i class="fas fa-building"></i> ${dept}</strong>
+            </div>
+            <button class="btn-icon delete-btn" onclick="removeDepartment(${idx})">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        container.appendChild(item);
+    });
+}
+
+window.removeDepartment = function(idx) {
+    state.departments.splice(idx, 1);
+    renderDeptList();
+    updateDeptSelect();
+};
 
 function updateDeptSelect() {
     const select = document.getElementById('course-dept-select');
