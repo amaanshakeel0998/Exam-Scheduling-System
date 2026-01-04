@@ -21,7 +21,7 @@
             </button>
             <div class="logo">
               <i class="fas fa-calendar-alt"></i>
-              <h1>University Datesheet Generator</h1>
+              <h1>Automatic Datesheet Generator</h1>
             </div>
           </div>
           <p class="subtitle">Tech & Innovative Society</p>
@@ -231,19 +231,13 @@
                     id="timeslot-select"
                     style="flex: 1"
                   >
-                    <input
-                      type="text"
-                      id="new-timeslot"
-                      list="timeslot-options"
-                      placeholder="e.g., 09:00 - 12:00"
-                      autocomplete="off"
-                    />
-                    <datalist id="timeslot-options">
-                      <option value="09:00 - 12:00"></option>
-                      <option value="13:00 - 16:00"></option>
-                      <option value="14:00 - 17:00"></option>
-                      <option value="08:30 - 11:30"></option>
-                    </datalist>
+                    <select id="new-timeslot">
+                      <option value="">Select Time Slot</option>
+                      <option value="08:30 - 11:30">08:30 - 11:30</option>
+                      <option value="09:00 - 12:00">09:00 - 12:00</option>
+                      <option value="01:00 - 04:00">01:00 - 04:00</option>
+                      <option value="14:00 - 17:00">02:00 - 05:00</option>
+                    </select>
                   </div>
                   <button class="btn btn-secondary" id="add-timeslot-btn">
                     <i class="fas fa-plus"></i> Add
@@ -262,7 +256,7 @@
                 <div class="form-group" style="flex: 1">
                   <label for="total-semesters">Total Semesters</label>
                   <div class="input-group">
-                    <input type="number" id="total-semesters" placeholder="e.g., 8" min="1" value="3" />
+                    <input type="number" id="total-semesters" placeholder="e.g., 8" min="1" />
                     <button class="btn btn-primary" id="apply-semesters-btn">
                       <i class="fas fa-check"></i> Apply
                     </button>
@@ -275,26 +269,17 @@
                   <label>Add Department</label>
                   <div class="input-group">
                     <div class="searchable-select" style="flex: 1">
-                      <input
-                        type="text"
-                        id="dept-input"
-                        list="dept-options"
-                        placeholder="Select or Enter Department"
-                      />
-                      <datalist id="dept-options">
-                        <option value="CS – Computer Science"></option>
-                        <option value="SE – Software Engineering"></option>
-                        <option value="BBA – Business Administration"></option>
-                        <option value="PSY – Psychology"></option>
-                        <option value="AF – Accounting & Finance"></option>
-                        <option value="ID – Interior Design"></option>
-                        <option
-                          value="ELS – English & Linguistic Studies"
-                        ></option>
-                        <option
-                          value="DDCA – Digital Design & Computer Arts"
-                        ></option>
-                      </datalist>
+                      <select id="dept-input">
+                        <option value="">Select Department</option>
+                        <option value="CS – Computer Science">CS – Computer Science</option>
+                        <option value="SE – Software Engineering">SE – Software Engineering</option>
+                        <option value="BBA – Business Administration">BBA – Business Administration</option>
+                        <option value="PSY – Psychology">PSY – Psychology</option>
+                        <option value="AF – Accounting & Finance">AF – Accounting & Finance</option>
+                        <option value="ID – Interior Design">ID – Interior Design</option>
+                        <option value="ELS – English & Linguistic Studies">ELS – English & Linguistic Studies</option>
+                        <option value="DDCA – Digital Design & Computer Arts">DDCA – Digital Design & Computer Arts</option>
+                      </select>
                     </div>
                     <button class="btn btn-secondary" id="add-dept-btn">
                       <i class="fas fa-plus"></i> Add
@@ -316,14 +301,14 @@
                 <div class="form-group" style="flex: 1">
                   <label for="course-semester">Semester</label>
                   <select id="course-semester">
-                    <option value="">Select Semester</option>
+                    <option value="3">Select Semester</option>
                   </select>
                 </div>
                 <div class="form-group" style="flex: 2">
                   <label>Departments</label>
                   <div class="input-group">
                     <div class="searchable-select" style="flex: 1">
-                      <select id="course-dept-select">
+                      <select id="course-dept-select" disabled>
                         <option value="">Select Dept</option>
                       </select>
                     </div>
@@ -346,71 +331,9 @@
                 <div class="form-group" style="flex: 2">
                   <label>Course Name</label>
                   <div class="searchable-select">
-                    <input
-                      type="text"
-                      id="course-name"
-                      list="course-options"
-                      placeholder="Select or Enter Course Name"
-                    />
-                    <datalist id="course-options">
-                      <option value="Application of ICT (Lab)"></option>
-                      <option value="Application of ICT (Theory)"></option>
-                      <option value="Artificial Intelligence"></option>
-                      <option value="Basic Mathematics Deficiency-I"></option>
-                      <option value="Basic Mathematics Deficiency-II"></option>
-                      <option
-                        value="Business Communication & Report Writing"
-                      ></option>
-                      <option value="Calculus & Analytical Geometry"></option>
-                      <option value="Civics and Community Engagement"></option>
-                      <option value="Cognitive Psychology"></option>
-                      <option value="Computer Networks"></option>
-                      <option
-                        value="Drawing From Observation & Material"
-                      ></option>
-                      <option value="Environmental Sciences"></option>
-                      <option value="Ethical Issues in Psychology"></option>
-                      <option value="Expository Writing"></option>
-                      <option value="Figure & Perspective Drawing"></option>
-                      <option value="Financial Accounting"></option>
-                      <option value="Fundamentals of Accounting"></option>
-                      <option value="Fundamentals of Drawing"></option>
-                      <option value="Functional English"></option>
-                      <option
-                        value="History of Arts in Ancient Civilization"
-                      ></option>
-                      <option value="Human Resource Management"></option>
-                      <option
-                        value="Ideology and Constitution of Pakistan"
-                      ></option>
-                      <option value="Introduction to Business"></option>
-                      <option value="Introduction to Linguistics"></option>
-                      <option
-                        value="Introduction to Literary Studies"
-                      ></option>
-                      <option value="Introduction to Psychology"></option>
-                      <option value="Islamic Studies"></option>
-                      <option value="Light, Color & Imaging"></option>
-                      <option value="Material & Process"></option>
-                      <option
-                        value="Object Oriented Programming (Lab)"
-                      ></option>
-                      <option
-                        value="Object Oriented Programming (Theory)"
-                      ></option>
-                      <option value="Pakistan Studies"></option>
-                      <option value="Programming Fundamentals (Lab)"></option>
-                      <option
-                        value="Programming Fundamentals (Theory)"
-                      ></option>
-                      <option
-                        value="Quantitative Reasoning (Discrete Structure)"
-                      ></option>
-                      <option value="Quantitative Reasoning-I"></option>
-                      <option value="Social Psychology"></option>
-                      <option value="Understanding of Holy Quran-I"></option>
-                      <option value="Visual Communication-I"></option>
-                    </datalist>
+                    <select id="course-name" disabled>
+                      <option value="">Select Course Name</option>
+                    </select>
                   </div>
                 </div>
                 <div class="form-group" style="flex: 1">
@@ -443,31 +366,26 @@
                 <div class="form-group" style="flex: 2">
                   <label>Name</label>
                   <div class="searchable-select">
-                    <input
-                      type="text"
-                      id="invigilator-name"
-                      list="invigilator-options"
-                      placeholder="Select or Enter Invigilator Name"
-                    />
-                    <datalist id="invigilator-options">
-                      <option value="Dr. Amad Ud Din"></option>
-                      <option value="Dr. Abdul Waheed"></option>
-                      <option value="Mr. Muhammad Adil"></option>
-                      <option value="Ms. Khadija Waheed"></option>
-                      <option value="Ms. Aina Merzia"></option>
-                      <option value="Dr. Rubab Tahir"></option>
-                      <option value="Ms. Amna Malik"></option>
-                      <option value="Ms. Farah Nazeer"></option>
-                      <option value="Mr. Muhammad Faran"></option>
-                      <option value="Dr. Aisha Parveen"></option>
-                      <option value="Dr. Aziz Haider"></option>
-                      <option value="Dr. Muhammad Bilal"></option>
-                      <option value="Dr. Saniya Moazzam"></option>
-                      <option value="Dr. Samiya Bashir"></option>
-                      <option value="Mr. Imran Ejaz"></option>
-                      <option value="Dr. Salman Chugtai"></option>
-                      <option value="Ms. Esha Gul"></option>
-                    </datalist>
+                    <select id="invigilator-name">
+                      <option value="">Select Invigilator</option>
+                      <option value="Dr. Amad Ud Din">Dr. Amad Ud Din</option>
+                      <option value="Dr. Abdul Waheed">Dr. Abdul Waheed</option>
+                      <option value="Mr. Muhammad Adil">Mr. Muhammad Adil</option>
+                      <option value="Ms. Khadija Waheed">Ms. Khadija Waheed</option>
+                      <option value="Ms. Aina Merzia">Ms. Aina Merzia</option>
+                      <option value="Dr. Rubab Tahir">Dr. Rubab Tahir</option>
+                      <option value="Ms. Amna Malik">Ms. Amna Malik</option>
+                      <option value="Ms. Farah Nazeer">Ms. Farah Nazeer</option>
+                      <option value="Mr. Muhammad Faran">Mr. Muhammad Faran</option>
+                      <option value="Dr. Aisha Parveen">Dr. Aisha Parveen</option>
+                      <option value="Dr. Aziz Haider">Dr. Aziz Haider</option>
+                      <option value="Dr. Muhammad Bilal">Dr. Muhammad Bilal</option>
+                      <option value="Dr. Saniya Moazzam">Dr. Saniya Moazzam</option>
+                      <option value="Dr. Samiya Bashir">Dr. Samiya Bashir</option>
+                      <option value="Mr. Imran Ejaz">Mr. Imran Ejaz</option>
+                      <option value="Dr. Salman Chugtai">Dr. Salman Chugtai</option>
+                      <option value="Ms. Esha Gul">Ms. Esha Gul</option>
+                    </select>
                   </div>
                 </div>
                 <div class="form-group" style="flex: 1">
@@ -630,6 +548,36 @@
       </div>
     </div>
 
+    <!-- PDF Configuration Modal -->
+    <div id="pdf-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-file-pdf"></i> PDF Export Configuration</h3>
+          <button class="close-modal-btn" id="close-pdf-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="pdf-institute-name">Institute Name</label>
+            <input type="text" id="pdf-institute-name" placeholder="e.g., University of Technology" />
+          </div>
+          <div class="form-group">
+            <label for="pdf-logo">Institute Logo</label>
+            <input type="file" id="pdf-logo" accept="image/*" />
+          </div>
+          <div class="form-group">
+            <label for="pdf-exam-title">Exam Title</label>
+            <input type="text" id="pdf-exam-title" placeholder="e.g., Final Exams Fall 2025" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-pdf-btn">Cancel</button>
+          <button class="btn btn-primary" id="download-pdf-btn">Download PDF</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Edit Exam Modal -->
     <div id="edit-modal" class="modal">
       <div class="modal-content">
@@ -642,7 +590,9 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="edit-semester">Semester</label>
-            <select id="edit-semester"></select>
+            <div class="searchable-select">
+              <select id="edit-semester"></select>
+            </div>
           </div>
           <div class="form-group">
             <label for="edit-course-code">Course Code</label>
@@ -658,11 +608,15 @@
           </div>
           <div class="form-group">
             <label for="edit-room">Room</label>
-            <select id="edit-room"></select>
+            <div class="searchable-select">
+              <select id="edit-room"></select>
+            </div>
           </div>
           <div class="form-group">
             <label for="edit-invigilator">Invigilator</label>
-            <select id="edit-invigilator"></select>
+            <div class="searchable-select">
+              <select id="edit-invigilator"></select>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -674,6 +628,8 @@
 
     <!-- Scripts -->
     <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="script.js"></script>
