@@ -251,6 +251,7 @@ function initializeSemesterDropdown() {
             return;
         }
         state.config.totalSemesters = total;
+        saveState();
         
         // Update exam course semester dropdown
         const options = ['<option value="">Select Semester</option>'];
@@ -548,6 +549,20 @@ function setupEventListeners() {
         document.getElementById('confirmation-modal').classList.remove('active');
     });
 
+    // 10. Config changes
+    document.getElementById('start-date').addEventListener('change', (e) => {
+        state.config.startDate = e.target.value;
+        saveState();
+    });
+    document.getElementById('end-date').addEventListener('change', (e) => {
+        state.config.endDate = e.target.value;
+        saveState();
+    });
+    document.getElementById('total-semesters').addEventListener('change', (e) => {
+        state.config.totalSemesters = parseInt(e.target.value);
+        saveState();
+    });
+
     // Edit Modal Buttons
     document.getElementById('close-edit-modal')?.addEventListener('click', () => {
         document.getElementById('edit-modal').classList.remove('active');
@@ -614,6 +629,7 @@ function setupEventListeners() {
         document.getElementById('edit-modal').classList.remove('active');
         renderDatesheet();
         checkConflictsAfterMove();
+        saveState();
     });
 }
 
@@ -655,6 +671,7 @@ function addTimeSlot() {
     if(val) {
         showConfirmation(`Add time slot "${val}"?`, () => {
             state.config.timeSlots.push(val);
+            saveState();
             renderTimeSlots();
             input.value = '';
         });
@@ -669,6 +686,7 @@ function renderTimeSlots() {
     // But renderTags takes an ID. Let's make sure it targets the right element.
     renderTagsOnElement(container, state.config.timeSlots, (idx) => {
         state.config.timeSlots.splice(idx, 1);
+        saveState();
         renderTimeSlots();
     });
 }
@@ -696,6 +714,7 @@ function addDepartment() {
     if(val && !state.departments.includes(val)) {
         showConfirmation(`Add department "${val}"?`, () => {
             state.departments.push(val);
+            saveState();
             renderDeptList();
             updateDeptSelect();
             input.value = '';
@@ -724,6 +743,7 @@ function renderDeptList() {
 
 window.removeDepartment = function(idx) {
     state.departments.splice(idx, 1);
+    saveState();
     renderDeptList();
     updateDeptSelect();
 };
@@ -901,6 +921,7 @@ function addExam() {
                 depts: [...tempExamDepts]
             });
             renderExamsList();
+            saveState();
             // clear inputs
             document.getElementById('course-semester').value = '';
             document.getElementById('course-name').value = '';
@@ -938,6 +959,7 @@ window.removeExam = function(idx) {
     // Optional: Confirm deletion
     if(confirm('Are you sure you want to remove this exam?')) {
         state.exams.splice(idx, 1);
+        saveState();
         renderExamsList();
     }
 };
@@ -976,6 +998,7 @@ function addInvigilator() {
                 availableDates: [...tempAvailableDates],
                 assignedDuties: 0 // Reset on generation
             });
+            saveState();
             renderInvigilatorsList();
             
             // Reset inputs
@@ -1008,6 +1031,7 @@ function renderInvigilatorsList() {
 window.removeInvigilator = function(idx) {
     if(confirm('Remove this invigilator?')) {
         state.invigilators.splice(idx, 1);
+        saveState();
         renderInvigilatorsList();
     }
 };
@@ -1019,6 +1043,7 @@ function addRoom() {
     if(name) {
         showConfirmation(`Add room "${name}"?`, () => {
             state.rooms.push({ id: Date.now(), name });
+            saveState();
             renderRoomsList();
             document.getElementById('room-name').value = '';
         });
@@ -1045,6 +1070,7 @@ function renderRoomsList() {
 window.removeRoom = function(idx) {
     if(confirm('Remove this room?')) {
         state.rooms.splice(idx, 1);
+        saveState();
         renderRoomsList();
     }
 };
@@ -1189,6 +1215,7 @@ function generateDatesheet() {
         console.log(`Generated ${state.generatedDatesheet.length} entries`);
         renderDatesheet();
         renderConflicts();
+        saveState();
         
         // Switch to view
         const datesheetNavItem = document.querySelector('.nav-item[data-section="datesheet"]');
@@ -1570,6 +1597,7 @@ window.onDrop = function(e) {
         renderDatesheet();
         // Recalculate conflicts if necessary
         checkConflictsAfterMove();
+        saveState();
     }
 }
 
@@ -1629,6 +1657,7 @@ window.deleteScheduledExam = function(index) {
         state.generatedDatesheet.splice(index, 1);
         renderDatesheet();
         checkConflictsAfterMove();
+        saveState();
     });
 }
 
@@ -1898,6 +1927,7 @@ function processImportedData(data, event) {
         
         renderDatesheet();
         renderConflicts();
+        saveState();
         if (event) event.target.value = '';
         console.log(`✅ Complex Import: ${importedExams.length} rows processed.`);
     });
@@ -1926,3 +1956,83 @@ function parseCSV(text) {
 }
 
 // Modal Buttons
+// ==========================================
+// Persistence (Local Storage)
+// ==========================================
+function saveState() {
+    try {
+        localStorage.setItem('datesheet_generator_state', JSON.stringify(state));
+    } catch (e) {
+        console.warn('Could not save session to localStorage:', e);
+    }
+}
+
+function loadState() {
+    try {
+        const saved = localStorage.getItem('datesheet_generator_state');
+        if (!saved) return;
+
+        const loadedState = JSON.parse(saved);
+        // Merge loaded state into current state
+        Object.assign(state, loadedState);
+        
+        // Refresh all UI components
+        refreshUIFromState();
+        
+        // Hide restore button after loading
+        const restoreBtn = document.getElementById('restore-session-btn');
+        if (restoreBtn) restoreBtn.classList.add('hidden');
+        
+        console.log('✅ Session restored successfully');
+    } catch (e) {
+        console.error('❌ Failed to restore session:', e);
+        alert('Could not restore previous session.');
+    }
+}
+
+function refreshUIFromState() {
+    // 1. Config inputs
+    if (state.config.startDate) document.getElementById('start-date').value = state.config.startDate;
+    if (state.config.endDate) document.getElementById('end-date').value = state.config.endDate;
+    if (state.config.totalSemesters) document.getElementById('total-semesters').value = state.config.totalSemesters;
+    
+    // 2. Render all lists
+    renderTimeSlots();
+    renderDeptList();
+    updateDeptSelect();
+    renderRoomsList();
+    renderInvigilatorsList();
+    renderExamsList();
+    
+    // 3. Update semester dropdowns
+    const totalInput = document.getElementById('total-semesters');
+    if (totalInput) {
+        const applyBtn = document.getElementById('apply-semesters-btn');
+        if (applyBtn) applyBtn.click();
+    }
+    
+    // 4. Render datesheet
+    if (state.generatedDatesheet && state.generatedDatesheet.length > 0) {
+        renderDatesheet();
+        renderConflicts();
+    }
+}
+
+function checkSavedSession() {
+    const saved = localStorage.getItem('datesheet_generator_state');
+    const restoreBtn = document.getElementById('restore-session-btn');
+    if (saved && restoreBtn) {
+        restoreBtn.classList.remove('hidden');
+    }
+}
+
+// Call this on initialization
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(checkSavedSession, 500); // Small delay to ensure all UI is ready
+    
+    document.getElementById('restore-session-btn')?.addEventListener('click', () => {
+        showConfirmation('Restore your previous session? This will overwrite current changes.', () => {
+            loadState();
+        });
+    });
+});
