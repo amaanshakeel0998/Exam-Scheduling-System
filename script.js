@@ -11,7 +11,7 @@ const state = {
         startDate: null,
         endDate: null,
         timeSlots: [],
-        totalSemesters: 8
+        totalSemesters: 3
     },
     generatedDatesheet: [],
     conflicts: []
@@ -20,46 +20,202 @@ const state = {
 // Course mappings for dropdown and auto-selection
 const courseMappings = [
     { code: "CS-308", name: "Artificial Intelligence" },
-    { code: "GEN-102", name: "Application of ICT (Theory)" },
-    { code: "GEN-102", name: "Application of ICT (Lab)" },
+    { code: "GEN-102", name: "Applications of Information & Communication Technologies" },
     { code: "MATH-123", name: "Calculus & Analytical Geometry" },
-    { code: "GEN-103", name: "Quantitative Reasoning-I" },
-    { code: "GEN-204", name: "Quantitative Reasoning-II" },
-    { code: "CS-103", name: "Quantitative Reasoning(Discrete Structure)" },
-    { code: "MATH-105", name: "Basic Mathematics Deficiency-II" },
-    { code: "CS-111", name: "Programming Fundamentals (Theory)" },
-    { code: "CL-111", name: "Programming Fundamentals (Lab)" },
-    { code: "CS-112", name: "Object Oriented Programming (Theory)" },
-    { code: "CL-112", name: "Object Oriented Programming (Lab)" },
+    { code: "GEN-103", name: "Quantitative Reasoning – I" },
+    { code: "GEN-204", name: "Quantitative Reasoning – II" },
+    { code: "CS-103", name: "Quantitative Reasoning (Discrete Structure)" },
+    { code: "CS-111 / CL-111", name: "Programming Fundamentals (Lab)" },
+    { code: "CS-112", name: "Object Oriented Programming (OOP)" },
     { code: "GEN-107", name: "Functional English" },
-    { code: "GEN-108", name: "Expository Writing" },
+    { code: "GEN-208", name: "Expository Writing" },
     { code: "ELL-113", name: "Introduction to Linguistics" },
     { code: "ELL-111", name: "Introduction to Literary Studies" },
-    { code: "GEN-305", name: "Light Color & Imaging" },
-    { code: "CA-402", name: "Drawing From Observation & Material" },
+    { code: "GEN-305", name: "Light, Color and Imaging" },
+    { code: "CA-402", name: "Drawing from Observation and Materials" },
     { code: "DE-113", name: "Visual Communication-I" },
     { code: "CA-403", name: "Figure & Perspective Drawing" },
     { code: "ACT-417", name: "Financial Accounting" },
     { code: "MGT-114", name: "Fundamentals of Accounting" },
-    { code: "GEN-302", name: "Environmental Sciences" },
+    { code: "GEN-302", name: "Environmental Science" },
     { code: "MGT-111", name: "Introduction to Business" },
-    { code: "CA-410", name: "History of Arts in Ancient Civilization" },
-    { code: "GEN-304", name: "Civics & Community Engagement" },
+    { code: "CA-410", name: "History of Art in Ancient Civilizations" },
+    { code: "GEN-304", name: "Civics and Community Engagement" },
     { code: "GEN-202", name: "Pakistan Studies" },
     { code: "PSY-122", name: "Cognitive Psychology" },
     { code: "PSY-322", name: "Social Psychology" },
     { code: "PSY-224", name: "Ethical Issues in Psychology" },
     { code: "PSY-112", name: "Introduction to Psychology" },
-    { code: "GEN-104", name: "Ideology & Constitution of Pakistan" },
+    { code: "GEN-104", name: "Ideology and Constitution of Pakistan" },
     { code: "GEN-203", name: "Islamic Studies" },
-    { code: "AHU-109", name: "Material & Process" },
+    { code: "AHU-109", name: "Material and Process" },
     { code: "CA-401", name: "Fundamentals of Drawing" },
-    { code: "MATH-104", name: "Basic Mathematics Deficiency-I" },
+    { code: "MATH-104", name: "Basic Mathematics-I" },
     { code: "CS-307", name: "Computer Networks" },
     { code: "MGT-212", name: "Business Communication & Report Writing" },
     { code: "MGT-213", name: "Human Resource Management" },
-    { code: "GEN-101", name: "Understanding of Holy Quran-I" }
+    { code: "GEN-101", name: "Understanding of Holy Quran – I" }
 ];
+
+const semesterCourseData = {
+    "1": {
+        "Computer Science (BS-CS)": [
+            "Understanding of Holy Quran – I",
+            "Applications of Information & Communication Technologies",
+            "Ideology and Constitution of Pakistan",
+            "Functional English",
+            "Programming Fundamentals (Lab)",
+            "Calculus & Analytical Geometry",
+            "Basic Mathematics-I"
+        ],
+        "Software Engineering (BS-SE)": [
+            "Understanding of Holy Quran – I",
+            "Applications of Information & Communication Technologies",
+            "Ideology and Constitution of Pakistan",
+            "Functional English",
+            "Programming Fundamentals (Lab)",
+            "Calculus & Analytical Geometry",
+            "Basic Mathematics-I"
+        ],
+        "Business Administration (BBA)": [
+            "Understanding of Holy Quran – I",
+            "Applications of Information & Communication Technologies",
+            "Quantitative Reasoning – I",
+            "Ideology and Constitution of Pakistan",
+            "Functional English",
+            "Introduction to Business",
+            "Fundamentals of Accounting"
+        ],
+        "Accounting & Finance (BS A&F)": [
+            "Understanding of Holy Quran – I",
+            "Applications of Information & Communication Technologies",
+            "Quantitative Reasoning – I",
+            "Ideology and Constitution of Pakistan",
+            "Functional English",
+            "Introduction to Business",
+            "Fundamentals of Accounting"
+        ],
+        "Psychology (BS-Psychology)": [
+            "Understanding of Holy Quran – I",
+            "Applications of Information & Communication Technologies",
+            "Quantitative Reasoning – I",
+            "Ideology and Constitution of Pakistan",
+            "Functional English",
+            "Introduction to Psychology",
+            "Cognitive Psychology"
+        ],
+        "Digital Design / Interior Design (DDCA)": [
+            "Understanding of Holy Quran – I",
+            "Applications of Information & Communication Technologies",
+            "Quantitative Reasoning – I",
+            "Ideology and Constitution of Pakistan",
+            "Functional English",
+            "Fundamentals of Drawing",
+            "History of Art in Ancient Civilizations"
+        ],
+        "Linguistics": [
+            "Understanding of Holy Quran – I",
+            "Applications of Information & Communication Technologies",
+            "Quantitative Reasoning – I",
+            "Ideology and Constitution of Pakistan",
+            "Functional English",
+            "Introduction to Literary Studies",
+            "Introduction to Linguistics"
+        ]
+    },
+    "2": {
+        "Computer Science (BS-CS)": [
+            "Introduction to Psychology",
+            "Pakistan Studies",
+            "Islamic Studies",
+            "Expository Writing",
+            "Calculus & Analytical Geometry",
+            "Object Oriented Programming (OOP)"
+        ],
+        "Software Engineering (BS-SE)": [
+            "Introduction to Psychology",
+            "Pakistan Studies",
+            "Islamic Studies",
+            "Expository Writing",
+            "Calculus & Analytical Geometry",
+            "Object Oriented Programming (OOP)"
+        ],
+        "Accounting & Finance (BS A&F)": [
+            "Introduction to Psychology",
+            "Pakistan Studies",
+            "Islamic Studies",
+            "Quantitative Reasoning – II",
+            "Expository Writing",
+            "Fundamentals of Accounting",
+            "Human Resource Management"
+        ],
+        "Psychology (BS-Psychology)": [
+            "Applications of Information & Communication Technologies",
+            "Pakistan Studies",
+            "Islamic Studies",
+            "Quantitative Reasoning – II",
+            "Expository Writing",
+            "Cognitive Psychology",
+            "Social Psychology"
+        ],
+        "Digital Design / Communication Arts (DDCA)": [
+            "Quantitative Reasoning – I",
+            "Pakistan Studies",
+            "Islamic Studies",
+            "Expository Writing",
+            "Material and Process",
+            "Drawing from Observation and Materials",
+            "History of Art in Ancient Civilizations"
+        ]
+    },
+    "3": {
+        "Computer Science (BS-CS)": [
+            "Quantitative Reasoning (Discrete Structure)",
+            "Pakistan Studies",
+            "Civics and Community Engagement",
+            "Introduction to Psychology",
+            "Business Communication & Report Writing",
+            "Computer Networks",
+            "Artificial Intelligence"
+        ],
+        "Software Engineering (BS-SE)": [
+            "Quantitative Reasoning (Discrete Structure)",
+            "Pakistan Studies",
+            "Civics and Community Engagement",
+            "Introduction to Psychology",
+            "Business Communication & Report Writing",
+            "Computer Networks",
+            "Artificial Intelligence"
+        ],
+        "Business Administration (BBA)": [
+            "Pakistan Studies",
+            "Quantitative Reasoning – II",
+            "Environmental Science",
+            "Civics and Community Engagement",
+            "Business Communication & Report Writing",
+            "Human Resource Management",
+            "Financial Accounting"
+        ],
+        "Psychology (BS-Psychology)": [
+            "Pakistan Studies",
+            "Quantitative Reasoning – II",
+            "Human Resource Management",
+            "Civics and Community Engagement",
+            "Business Communication & Report Writing",
+            "Ethical Issues in Psychology",
+            "Social Psychology"
+        ],
+        "Digital Design / Communication Arts (DDCA)": [
+            "Quantitative Reasoning – I",
+            "Pakistan Studies",
+            "Civics and Community Engagement",
+            "Light, Color and Imaging",
+            "Material and Process",
+            "Visual Communication-I",
+            "Figure & Perspective Drawing"
+        ]
+    }
+};
 
 // ==========================================
 // Initialization & Theme
@@ -348,15 +504,6 @@ function setupNavigation() {
 }
 
 function setupEventListeners() {
-    // 0. Global Click-to-Show Datalist Fix
-    document.querySelectorAll('input[list]').forEach(input => {
-        input.addEventListener('click', function() {
-            // Only clear if user clicks an already focused input or just to show options
-            this.value = ''; 
-            this.dispatchEvent(new Event('input'));
-        });
-    });
-
     // 1. Time Slots
     document.getElementById('add-timeslot-btn').addEventListener('click', addTimeSlot);
     
@@ -366,7 +513,9 @@ function setupEventListeners() {
     // 3. Exams
     document.getElementById('add-exam-btn').addEventListener('click', addExam);
     document.getElementById('add-exam-dept-btn').addEventListener('click', addExamDeptTemp);
-    document.getElementById('course-name').addEventListener('input', handleCourseNameInput);
+    document.getElementById('course-name').addEventListener('change', handleCourseNameInput);
+    document.getElementById('course-semester').addEventListener('change', handleSemesterChange);
+    document.getElementById('course-dept-select').addEventListener('change', handleDeptChange);
 
     // 4. Invigilators
     document.getElementById('add-invigilator-btn').addEventListener('click', addInvigilator);
@@ -402,6 +551,20 @@ function setupEventListeners() {
     // Edit Modal Buttons
     document.getElementById('close-edit-modal')?.addEventListener('click', () => {
         document.getElementById('edit-modal').classList.remove('active');
+    });
+
+    // PDF Modal Buttons
+    document.getElementById('close-pdf-modal')?.addEventListener('click', () => {
+        document.getElementById('pdf-modal').classList.remove('active');
+    });
+
+    document.getElementById('cancel-pdf-btn')?.addEventListener('click', () => {
+        document.getElementById('pdf-modal').classList.remove('active');
+    });
+
+    document.getElementById('download-pdf-btn')?.addEventListener('click', () => {
+        // This will be handled by the specialized export function
+        processPDFDownload();
     });
 
     document.getElementById('cancel-edit-btn')?.addEventListener('click', () => {
@@ -565,8 +728,114 @@ window.removeDepartment = function(idx) {
     updateDeptSelect();
 };
 
+function handleSemesterChange() {
+    const semester = document.getElementById('course-semester').value;
+    const deptSelect = document.getElementById('course-dept-select');
+    const courseNameInput = document.getElementById('course-name');
+    const courseCodeSelect = document.getElementById('course-code');
+
+    // Reset logic
+    deptSelect.value = '';
+    courseNameInput.value = '';
+    courseCodeSelect.value = '';
+    tempExamDepts = []; // Clear temp depts list as well
+    document.getElementById('exam-depts-list').innerHTML = '';
+
+    if (semester) {
+        deptSelect.disabled = false;
+        updateDeptDropdown(semester);
+        refreshCourseOptions();
+    } else {
+        deptSelect.disabled = true;
+        courseNameInput.disabled = true;
+        courseNameInput.innerHTML = '<option value="">Select Course Name</option>';
+    }
+}
+
+function handleDeptChange() {
+    const courseNameInput = document.getElementById('course-name');
+    const courseCodeSelect = document.getElementById('course-code');
+
+    // Reset logic
+    courseNameInput.value = '';
+    courseCodeSelect.value = '';
+
+    refreshCourseOptions();
+}
+
+function refreshCourseOptions() {
+    const semester = document.getElementById('course-semester').value;
+    const currentDept = document.getElementById('course-dept-select').value;
+    const courseNameSelect = document.getElementById('course-name');
+    
+    // Departments to show courses for: tempExamDepts + currentDept (if any)
+    let deptsToShow = [...tempExamDepts];
+    if (currentDept && !deptsToShow.includes(currentDept)) {
+        deptsToShow.push(currentDept);
+    }
+    
+    if (semester && deptsToShow.length > 0) {
+        courseNameSelect.disabled = false;
+        updateCourseDropdown(semester, deptsToShow);
+    } else {
+        if (tempExamDepts.length === 0 && !currentDept) {
+            courseNameSelect.disabled = true;
+        }
+        courseNameSelect.innerHTML = '<option value="">Select Course Name</option>';
+    }
+}
+
+function updateCourseDropdown(semester, depts) {
+    const select = document.getElementById('course-name');
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">Select Course Name</option>';
+
+    if (!semesterCourseData[semester]) return;
+
+    const deptsArray = Array.isArray(depts) ? depts : [depts];
+
+    deptsArray.forEach(dept => {
+        if (semesterCourseData[semester][dept]) {
+            const group = document.createElement('optgroup');
+            group.label = dept;
+            
+            const courses = semesterCourseData[semester][dept];
+            courses.forEach(courseName => {
+                const opt = document.createElement('option');
+                opt.value = courseName;
+                opt.innerText = courseName;
+                group.appendChild(opt);
+            });
+            select.appendChild(group);
+        }
+    });
+    
+    if (currentValue) select.value = currentValue;
+}
+
+function updateDeptDropdown(semester) {
+    const deptSelect = document.getElementById('course-dept-select');
+    deptSelect.innerHTML = '<option value="">Select Dept</option>';
+
+    if (semesterCourseData[semester]) {
+        const departments = Object.keys(semesterCourseData[semester]);
+        departments.forEach(dept => {
+            const opt = document.createElement('option');
+            opt.value = dept;
+            opt.innerText = dept;
+            deptSelect.appendChild(opt);
+        });
+    }
+}
+
 function updateDeptSelect() {
+    const semester = document.getElementById('course-semester').value;
+    if (semester) {
+        updateDeptDropdown(semester);
+        return;
+    }
     const select = document.getElementById('course-dept-select');
+    if (!select) return;
     select.innerHTML = '<option value="">Select Dept</option>';
     state.departments.forEach(dept => {
         const opt = document.createElement('option');
@@ -587,6 +856,7 @@ function addExamDeptTemp() {
             tempExamDepts.push(dept);
             renderTempExamDepts();
             deptSelect.value = '';
+            refreshCourseOptions();
         } else {
             alert('This department is already added.');
         }
@@ -599,6 +869,7 @@ function renderTempExamDepts() {
     renderTags('exam-depts-list', tempExamDepts, (idx) => {
         tempExamDepts.splice(idx, 1);
         renderTempExamDepts();
+        refreshCourseOptions();
     });
 }
 
@@ -637,6 +908,7 @@ function addExam() {
             tempExamDepts = [];
             document.getElementById('exam-depts-list').innerHTML = '';
             document.getElementById('course-dept-select').value = '';
+            handleSemesterChange();
         });
     } else {
         alert('Please fill all exam fields correctly (including Semester) and add at least one department.');
@@ -847,52 +1119,56 @@ function generateDatesheet() {
         const sortedExams = shuffleArray([...state.exams]);
         console.log(`Sorting ${sortedExams.length} exams`);
 
-        // Greedy Allocation
+        // Greedy Allocation with Distribution
         sortedExams.forEach(exam => {
-            let placed = false;
+            let possibleSlots = [];
             
-            // Try to find a slot
+            // Find all valid slots for this exam
             for (let slot of availableSlots) {
-                
                 // Check Room Availability
                 const usedRoomsInSlot = slot.exams.map(e => e.room.id);
-                let validRooms = state.rooms.filter(r => 
-                    !usedRoomsInSlot.includes(r.id)
-                );
+                const validRooms = state.rooms.filter(r => !usedRoomsInSlot.includes(r.id));
 
-                if(validRooms.length === 0) {
-                    continue; // No room available in this slot
-                }
+                if(validRooms.length === 0) continue;
                 
-                // Randomize room selection
-                validRooms = shuffleArray(validRooms);
-
                 // Check Invigilator Availability
                 const busyInvigilatorsInSlot = slot.exams.map(e => e.invigilator ? e.invigilator.id : null).filter(id => id !== null);
-                let validInvigilators = state.invigilators.filter(inv => 
+                
+                const validInvigilators = state.invigilators.filter(inv => 
                     !busyInvigilatorsInSlot.includes(inv.id) &&
                     inv.assignedDuties < inv.maxDuties &&
-                    (inv.availableDates.length === 0 || inv.availableDates.includes(slot.date))
+                    (inv.availableDates.length === 0 || inv.availableDates.includes(slot.date)) &&
+                    !state.generatedDatesheet.some(entry => entry.date === slot.date && entry.invigilator === inv.name)
                 );
 
-                if(validInvigilators.length === 0 && state.invigilators.length > 0) {
-                    continue; 
-                }
-                
-                // Randomize invigilator selection
-                validInvigilators = shuffleArray(validInvigilators);
+                if(validInvigilators.length === 0 && state.invigilators.length > 0) continue;
 
-                // Assign
-                const room = validRooms[0];
-                const invigilator = validInvigilators.length > 0 ? validInvigilators[0] : null;
+                // This slot is valid, store it with its available resources
+                possibleSlots.push({
+                    slot: slot,
+                    validRooms: validRooms,
+                    validInvigilators: validInvigilators
+                });
+            }
+
+            if (possibleSlots.length > 0) {
+                // To distribute evenly, we sort possible slots by the number of exams already in them.
+                // This will prioritize Slot 2 if Slot 1 is getting full, and vice versa.
+                possibleSlots.sort((a, b) => a.slot.exams.length - b.slot.exams.length);
+                
+                const chosen = possibleSlots[0];
+                const slot = chosen.slot;
+                const room = shuffleArray(chosen.validRooms)[0];
+                
+                let invigilator = null;
+                if (chosen.validInvigilators.length > 0) {
+                    // Still balance the invigilator duties within the chosen slot
+                    invigilator = shuffleArray(chosen.validInvigilators).sort((a, b) => a.assignedDuties - b.assignedDuties)[0];
+                }
 
                 if(invigilator) invigilator.assignedDuties++;
                 
-                slot.exams.push({
-                    exam: exam,
-                    room: room,
-                    invigilator: invigilator
-                });
+                slot.exams.push({ exam, room, invigilator });
 
                 state.generatedDatesheet.push({
                     date: slot.date,
@@ -904,14 +1180,9 @@ function generateDatesheet() {
                     room: room.name,
                     invigilator: invigilator ? invigilator.name : 'N/A'
                 });
-
-                placed = true;
-                break;
-            }
-
-            if(!placed) {
+            } else {
                 console.warn(`Could not place exam: ${exam.code}`);
-                state.conflicts.push(`Could not schedule ${exam.code} (${exam.name}) - No available room or invigilator.`);
+                state.conflicts.push(`Could not schedule ${exam.code} (${exam.name}) - No available room or invigilator that maintains spacing.`);
             }
         });
 
@@ -1084,8 +1355,89 @@ function exportCSV() {
 }
 
 function exportPDF() {
-    // Simple Print View for now
-    window.print();
+    if (!state.generatedDatesheet || state.generatedDatesheet.length === 0) {
+        alert('No datesheet to export. Please generate one first.');
+        return;
+    }
+    document.getElementById('pdf-modal').classList.add('active');
+}
+
+async function processPDFDownload() {
+    const instituteName = document.getElementById('pdf-institute-name').value || 'University Datesheet';
+    const examTitle = document.getElementById('pdf-exam-title').value || '';
+    const logoFile = document.getElementById('pdf-logo').files[0];
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('l', 'mm', 'a4'); // Landscape orientation
+
+    let currentY = 20;
+
+    // Handle Logo
+    if (logoFile) {
+        const logoData = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsDataURL(logoFile);
+        });
+        // Add logo (x, y, w, h)
+        doc.addImage(logoData, 'PNG', 14, 10, 25, 25);
+        currentY = 15; // Reset currentY for text alignment with logo
+    }
+
+    // Add Institute Name
+    doc.setFontSize(22);
+    doc.setTextColor(40);
+    doc.text(instituteName, logoFile ? 45 : 14, currentY + 10);
+    
+    // Add Exam Title
+    if (examTitle) {
+        doc.setFontSize(16);
+        doc.setTextColor(100);
+        doc.text(examTitle, logoFile ? 45 : 14, currentY + 18);
+    }
+
+    // Add Generation Date
+    doc.setFontSize(10);
+    doc.setTextColor(150);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 280, 20, { align: 'right' });
+
+    // Prepare table data
+    const head = [['Date', 'Time', 'Sem', 'Course Code', 'Course Name', 'Departments', 'Room', 'Invigilator']];
+    const body = state.generatedDatesheet.map(entry => [
+        entry.date,
+        entry.time,
+        entry.semester,
+        entry.courseCode,
+        entry.courseName,
+        entry.depts.join(', '),
+        entry.room,
+        entry.invigilator
+    ]);
+
+    // Generate Table
+    doc.autoTable({
+        head: head,
+        body: body,
+        startY: logoFile ? 40 : 45,
+        theme: 'striped',
+        headStyles: { fillColor: [74, 144, 226], textColor: 255 },
+        styles: { fontSize: 9, cellPadding: 3 },
+        columnStyles: {
+            0: { cellWidth: 25 }, // Date
+            1: { cellWidth: 30 }, // Time
+            2: { cellWidth: 10 }, // Sem
+            3: { cellWidth: 25 }, // Course Code
+            4: { cellWidth: 'auto' }, // Course Name
+            5: { cellWidth: 40 }, // Departments
+            6: { cellWidth: 20 }, // Room
+            7: { cellWidth: 25 }  // Invigilator
+        },
+        margin: { top: 35 }
+    });
+
+    // Close Modal and Save PDF
+    document.getElementById('pdf-modal').classList.remove('active');
+    doc.save(`${instituteName.replace(/\s+/g, '_')}_Datesheet.pdf`);
 }
 
 // ==========================================
@@ -1253,11 +1605,13 @@ window.editScheduledExam = function(index) {
     
     // Fill room select
     const roomSelect = document.getElementById('edit-room');
-    roomSelect.innerHTML = state.rooms.map(r => `<option value="${r.name}" ${r.name === exam.room ? 'selected' : ''}>${r.name}</option>`).join('');
+    roomSelect.innerHTML = '<option value="">Select Room</option>' + 
+        state.rooms.map(r => `<option value="${r.name}" ${r.name === exam.room ? 'selected' : ''}>${r.name}</option>`).join('');
     
     // Fill invigilator select
     const invSelect = document.getElementById('edit-invigilator');
-    invSelect.innerHTML = '<option value="N/A">N/A</option>' + 
+    invSelect.innerHTML = '<option value="">Select Invigilator</option>' + 
+        `<option value="N/A" ${exam.invigilator === 'N/A' ? 'selected' : ''}>N/A</option>` + 
         state.invigilators.map(inv => `<option value="${inv.name}" ${inv.name === exam.invigilator ? 'selected' : ''}>${inv.name}</option>`).join('');
     
     document.getElementById('edit-modal').classList.add('active');
@@ -1281,11 +1635,15 @@ window.openAddExamModal = function(date, slot) {
     document.getElementById('edit-course-name').value = '';
     document.getElementById('edit-depts').value = '';
     
+    // Fill room select
     const roomSelect = document.getElementById('edit-room');
-    roomSelect.innerHTML = state.rooms.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
+    roomSelect.innerHTML = '<option value="">Select Room</option>' + 
+        state.rooms.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
     
+    // Fill invigilator select
     const invSelect = document.getElementById('edit-invigilator');
-    invSelect.innerHTML = '<option value="N/A">N/A</option>' + 
+    invSelect.innerHTML = '<option value="">Select Invigilator</option>' + 
+        '<option value="N/A">N/A</option>' + 
         state.invigilators.map(inv => `<option value="${inv.name}">${inv.name}</option>`).join('');
     
     // Store date/slot in modal for adding
