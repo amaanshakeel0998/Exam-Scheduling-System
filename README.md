@@ -1,9 +1,12 @@
-# Datesheet Generator (Exam Scheduling System)
+# Exam Scheduling System
 
 A single-page web app for creating and managing exam datesheets. It lets you configure date ranges and time slots, define departments and courses, manage invigilators and student enrollments, then generate a datesheet with conflict status and exports.
 
 ## Developer
 - Muhammad Amaan
+
+## Important Info
+- This is specially designed for a specific University, SO you wanna use, first edit your slots, teachers, and everything related to this.
 
 ## Features
 - Date range and daily time slot configuration
