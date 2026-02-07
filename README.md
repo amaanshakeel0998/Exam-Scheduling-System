@@ -49,4 +49,4 @@ open index.html
 - CSV/Excel import expects the format shown in the UI helper text.
 
 ## License
-Add your license here.
+It's a free and open source project for a university project.
