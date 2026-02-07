@@ -2,6 +2,9 @@
 
 A single-page web app for creating and managing exam datesheets. It lets you configure date ranges and time slots, define departments and courses, manage invigilators and student enrollments, then generate a datesheet with conflict status and exports.
 
+## Developer
+- Muhammad Amaan
+
 ## Features
 - Date range and daily time slot configuration
 - Departments and semester setup
